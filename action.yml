@@ -1,0 +1,5 @@
+name: "Deploy comment"
+description: "Add a comment to the PR with the latest deployment URL"
+runs:
+  using: "node12"
+  main: "dist/index.js"

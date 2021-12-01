@@ -1,0 +1,22 @@
+{
+  "name": "comment-new-deploy",
+  "description": "Add a comment to a PR after a deploy is done",
+  "private": false,
+  "main": "index.js",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/arielj/comment-new-deploy"
+  },
+  "scripts": {
+    "prepare": "ncc build src/index.ts -o dist --source-map --license licenses.txt"
+  },
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0",
+    "@types/node": "^16.11.11"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.31.1",
+    "typescript": "^4.5.2"
+  }
+}
