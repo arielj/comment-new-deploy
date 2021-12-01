@@ -8297,38 +8297,49 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 // looks like PRs are also treated as issues
-// const issue = github.context.issue;
-// const deployUrl = "some url" // github.context;
-core.debug(JSON.stringify(github.context));
-// async function run() {
-//   core.debug("init octokit");
-//   if (!process.env.GITHUB_TOKEN) {
-//     core.error(
-//       "Couldn't connect to GitHub, make sure the GITHUB_TOKEN secret is set"
-//     );
-//     return;
-//   }
-//   const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-//   if (!octokit) {
-//     core.error(
-//       "Couldn't connect to GitHub, make sure the GITHUB_TOKEN is a valid token"
-//     );
-//     return;
-//   }
-//   core.info(`Removing ${labelToRemove}`);
-//   octokit.rest.issues.createComment({
-//     owner: issue.owner,
-//     repo: issue.repo,
-//     issue_number: issue.number,
-//     body: deployUrl,
-//   });
-//   core.info("Action completed");
-// }
-// run();
+const issue = github.context.issue;
+const deploymentStatus = github.context.payload.deployment_status;
+if (deploymentStatus.status == "success") {
+    function run() {
+        return __awaiter(this, void 0, void 0, function* () {
+            core.debug("init octokit");
+            if (!process.env.GITHUB_TOKEN) {
+                core.error("Couldn't connect to GitHub, make sure the GITHUB_TOKEN secret is set");
+                return;
+            }
+            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+            if (!octokit) {
+                core.error("Couldn't connect to GitHub, make sure the GITHUB_TOKEN is a valid token");
+                return;
+            }
+            core.info("Adding comment");
+            octokit.rest.issues.createComment({
+                owner: issue.owner,
+                repo: issue.repo,
+                issue_number: issue.number,
+                body: deploymentStatus.environment_url,
+            });
+            core.info("Action completed");
+        });
+    }
+    run();
+}
+else {
+    core.info("Deploy was not successful");
+}
 
 
 /***/ }),

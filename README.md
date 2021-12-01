@@ -9,12 +9,10 @@ Add a comment to the PR with the latest deploy URL
 If you want to remove the `ready-to-qa` label when the `ready-to-merge` label is added to a PR:
 
 ```yml
-# .github/workflows/unlabel.yml
+# .github/workflows/comment-deploy.yml
 
 name: Deploy URL
-on:
-  pull_request:
-    types: [deploy_status]
+on: deployment_status
 
 jobs:
   deploy-status:
